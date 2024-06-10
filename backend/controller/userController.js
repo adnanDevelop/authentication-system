@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
-const register = async (req, res) => {
+const registerUser = async (req, res) => {
   try {
     let { name, userName, email, password, confirmPassword, gender } = req.body;
     console.log(req.body);
@@ -62,15 +62,30 @@ const register = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { userName, password } = req.body;
+  try {
+    const { userName, password } = req.body;
+    if (!userName || !password) {
+      res.status(400).json({
+        message: "All fields are required",
+        status: 400,
+      });
 
-  if (!userName || !password) {
-    res.status(400).json({
-      message: "All fields are required",
-      status: 400,
-    });
+      const user = await User.find({ userName });
+      if (!user) {
+        res.status(400).json({
+          message: "Incorrect username or password",
+          status: 400,
+        });
+      }
+
+      res.status(200).json({
+        data: user,
+      });
+      console.log(user);
+    }
+  } catch (error) {
+    console.log(error);
   }
-  //   const matchPassword = bcrypt.compare(password, password);
 };
 
-export { register };
+export { registerUser, loginUser };

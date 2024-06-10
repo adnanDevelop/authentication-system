@@ -33,8 +33,8 @@ const userModel = new Schema(
       type: Date,
       default: Date.now,
     },
-  },
-  { timestamps: true }
+  }
+  // { timestamps: true }
 );
 
 const User = new model("User", userModel);
