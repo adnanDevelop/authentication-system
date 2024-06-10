@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { string } from "zod";
+import jwt from "jsonwebtoken";
 
 const userModel = new Schema(
   {
@@ -36,6 +36,28 @@ const userModel = new Schema(
   }
   // { timestamps: true }
 );
+
+userModel.pre("save", async function (next) {
+  console.log(this);
+});
+
+userModel.methods.generateToken = async function (userId) {
+  const userData = this;
+  console.log(userData);
+  try {
+    return jwt.sign(
+      {
+        userId: this.id,
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "15d",
+      }
+    );
+  } catch (error) {
+    console.log("Error while generating token", error);
+  }
+};
 
 const User = new model("User", userModel);
 export default User;

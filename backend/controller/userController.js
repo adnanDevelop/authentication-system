@@ -55,6 +55,7 @@ const registerUser = async (req, res) => {
       status: 200,
       message: "Account created successfully",
       data: registerUser,
+      token: registerUser.generateToken(registerUser._id, res),
     });
   } catch (error) {
     console.log(error);
